@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicsSim", "PhysicsSim.csproj", "{54CE929B-0B42-54D8-9073-442337CAAEE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicsSim.Editor", "PhysicsSim.Editor.csproj", "{788566A0-B4EC-C469-F26D-3C61BCEAFCEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54CE929B-0B42-54D8-9073-442337CAAEE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54CE929B-0B42-54D8-9073-442337CAAEE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54CE929B-0B42-54D8-9073-442337CAAEE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54CE929B-0B42-54D8-9073-442337CAAEE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{788566A0-B4EC-C469-F26D-3C61BCEAFCEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{788566A0-B4EC-C469-F26D-3C61BCEAFCEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{788566A0-B4EC-C469-F26D-3C61BCEAFCEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{788566A0-B4EC-C469-F26D-3C61BCEAFCEE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
