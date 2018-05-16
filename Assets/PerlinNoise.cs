@@ -8,7 +8,8 @@ public class PerlinNoise : MonoBehaviour
     public int height = 256;
 
     public float scale = 20f;
-
+    public float time;
+    public float offset = 0f;
     public float offsetX = 100f;
     public float offsetY = 100f;
 
@@ -31,6 +32,7 @@ public class PerlinNoise : MonoBehaviour
     public bool AnimatePerlin = false;
     private void Start()
     {
+        
         //offsetX = Random.Range(0f, 99999f);
         //offsetY = Random.Range(0f, 99999f);
         maxX = widthOfCubes * cubeScale;
@@ -46,10 +48,7 @@ public class PerlinNoise : MonoBehaviour
                 GameObject go = Instantiate(cube);
                 go.transform.localScale = new Vector3(cubeScale,cubeScale,cubeScale);
                 go.transform.position = new Vector3(i, 0.0f, j);
-                float scaledX = ScaleACoord(0.0f, cubeScale * widthOfCubes, 0.0f, 1.0f, go.transform.position.x);
-                float scaledZ = ScaleACoord(0.0f, cubeScale * widthOfCubes, 0.0f, 1.0f, go.transform.position.z);
-                perlinNoise = Mathf.PerlinNoise((scaledX * frequency + Time.time), (scaledZ * frequency + Time.time));
-                go.transform.position = new Vector3(go.transform.position.x, perlinNoise, go.transform.position.z);
+                
 
                 cubes.Add(go);
             }
@@ -61,22 +60,34 @@ public class PerlinNoise : MonoBehaviour
 
     void Update()
     {
-
+        //float time = 0.0f;
         if (AnimatePerlin)
         {
+            time += (Time.deltaTime * offset);
             foreach (GameObject cube in cubes)
             {
-
+                
                 float scaledX = ScaleACoord(0.0f, cubeScale * widthOfCubes, 0.0f, 1.0f, cube.transform.position.x);
                 float scaledZ = ScaleACoord(0.0f, cubeScale * widthOfCubes, 0.0f, 1.0f, cube.transform.position.z);
-                perlinNoise = Mathf.PerlinNoise((scaledX * frequency + Time.time), (scaledZ * frequency + Time.time));
+                perlinNoise = Mathf.PerlinNoise((scaledX * frequency + time), (scaledZ * frequency + time));
                 //GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 cube.transform.position = new Vector3(cube.transform.position.x, perlinNoise * magnitude, cube.transform.position.z);
                 //cubes.Add(go);
 
             }
         }
+        else
+        {
+            foreach (GameObject cube in cubes)
+            {
+                float scaledX = ScaleACoord(0.0f, cubeScale * widthOfCubes, 0.0f, 1.0f, cube.transform.position.x);
+                float scaledZ = ScaleACoord(0.0f, cubeScale * widthOfCubes, 0.0f, 1.0f, cube.transform.position.z);
+                perlinNoise = Mathf.PerlinNoise((scaledX * frequency + time), (scaledZ * frequency + time));
 
+                cube.transform.position = new Vector3(cube.transform.position.x, perlinNoise * magnitude, cube.transform.position.z);
+
+            }
+        }
 
 
     }
