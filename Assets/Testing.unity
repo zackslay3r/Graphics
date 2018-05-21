@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -310,6 +310,10 @@ Prefab:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 1c0f530d91ef0cf449b3dff3e88823d9, type: 2}
+    - target: {fileID: 100000, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_Name
+      value: Zombie
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
   m_IsPrefabParent: 0
@@ -326,6 +330,8 @@ GameObject:
   - component: {fileID: 1223277007}
   - component: {fileID: 1223277006}
   - component: {fileID: 1223277010}
+  - component: {fileID: 1223277011}
+  - component: {fileID: 1223277012}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -340,11 +346,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1223277004}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 27.800001, z: -1.117}
+  m_LocalPosition: {x: 0, y: 1.7000008, z: -1.117}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1814122821}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1223277006
 MonoBehaviour:
@@ -417,7 +423,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1223277004}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e71d0f39f76175d4aaad0bd4b190cd9c, type: 3}
   m_Name: 
@@ -427,7 +433,39 @@ MonoBehaviour:
   RotationPos: {x: 0, y: 0, z: 0}
   moveSpeed: 5
   turnSpeed: 10
-  smoothSpeed: 0.5
+  smoothSpeed: 5
+--- !u!114 &1223277011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1223277004}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76806479d916a64aa03f8e3eba7912f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1814122821}
+  distance: 3
+  height: 3.5
+  rotationDamping: 0
+  heightDamping: 0
+--- !u!114 &1223277012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1223277004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 603c5336cb61f384a9973798d8c4bc63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceAway: 3
+  distanceUp: 3
+  smooth: 0.5
+  follow: {fileID: 1814122821}
+  targetPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1229593897
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,28 +607,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90ce5065448d0524b8d02626683f86bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravity: 5
   velocity: 1
   turnSpeed: 2
+  jumpVel: 15
+  height: 0.089
+  heightPadding: 0.5
+  ground:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  maxGroundAngle: 120
+  debug: 1
+  oldY: 0
+  JUMP_AXIS: Jump
   playercam: {fileID: 1223277009}
+  grounded: 0
+  speed: 1
+  jumpSpeed: 10
 --- !u!4 &1814122821 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
   m_PrefabInternal: {fileID: 1087206026}
---- !u!54 &1814122822
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1814122818}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!114 &1814122823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,10 +667,27 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.34349734
+  m_Height: 1.9127808
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.86719704, z: 0.15650266}
+--- !u!143 &1814122826
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1814122818}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.32
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0.26, y: 0.84, z: 0.12}
 --- !u!1 &1918790707
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,7 +740,7 @@ MonoBehaviour:
   widthOfCubes: 50
   lengthOfCubes: 50
   perlinNoise: 0
-  frequency: 0
-  magnitude: 0
+  frequency: 7
+  magnitude: 2
   cubeScale: 1
   AnimatePerlin: 0
