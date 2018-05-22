@@ -314,6 +314,50 @@ Prefab:
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
   m_IsPrefabParent: 0
@@ -440,7 +484,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1223277004}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f76806479d916a64aa03f8e3eba7912f, type: 3}
   m_Name: 
@@ -584,18 +628,6 @@ MonoBehaviour:
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 43cc682a9ccf5434495e8ff1502608f9, type: 3}
   m_PrefabInternal: {fileID: 1087206026}
---- !u!65 &1814122819
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1814122818}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 0.7704543, y: 1.4781342, z: 0.71638334}
-  m_Center: {x: 0.022971332, y: 0.7685566, z: 0.14180833}
 --- !u!114 &1814122820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -607,9 +639,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90ce5065448d0524b8d02626683f86bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 5
-  velocity: 1
-  turnSpeed: 2
+  gravity: 4
+  velocity: 20
+  turnSpeed: 100
   jumpVel: 15
   height: 0.089
   heightPadding: 0.5
@@ -619,10 +651,11 @@ MonoBehaviour:
   maxGroundAngle: 120
   debug: 1
   oldY: 0
+  inputDelay: 0.1
   JUMP_AXIS: Jump
   playercam: {fileID: 1223277009}
   grounded: 0
-  speed: 1
+  speed: 20
   jumpSpeed: 10
 --- !u!4 &1814122821 stripped
 Transform:
@@ -639,9 +672,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d2ddc393322ed4eafe0a69b271a922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 0.5
-  heightPadding: 0.05
-  maxGroundAngle: 120
+  height: 0.089
+  heightPadding: 0.5
+  maxGroundAngle: 45
   debug: 0
   moveSetting:
     forwardVel: 12
@@ -652,25 +685,12 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 4294967295
   physSetting:
-    downAccel: 1.25
+    downAccel: 1.5
   inputSetting:
     inputDelay: 0.1
     TURN_AXIS: Horizontal
     FORWARD_AXIS: Vertical
     JUMP_AXIS: Jump
---- !u!136 &1814122825
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1814122818}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.34349734
-  m_Height: 1.9127808
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.86719704, z: 0.15650266}
 --- !u!143 &1814122826
 CharacterController:
   m_ObjectHideFlags: 0
@@ -681,13 +701,24 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.32
-  m_SlopeLimit: 45
+  m_Height: 1.7
+  m_Radius: 0.5
+  m_SlopeLimit: 60
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0.26, y: 0.84, z: 0.12}
+  m_Center: {x: 0, y: -0.02, z: 0.22}
+--- !u!114 &1814122827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1814122818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc37c48349beb944da6cdf8fa6da68c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1918790707
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,10 +768,10 @@ MonoBehaviour:
   offsetY: 100
   cube: {fileID: 1770715384298290, guid: 6a417faf41014aa4cac539fbe4c83428, type: 2}
   cubes: []
-  widthOfCubes: 50
-  lengthOfCubes: 50
+  widthOfCubes: 100
+  lengthOfCubes: 100
   perlinNoise: 0
-  frequency: 7
-  magnitude: 2
-  cubeScale: 1
+  frequency: 15
+  magnitude: 40
+  cubeScale: 10
   AnimatePerlin: 0

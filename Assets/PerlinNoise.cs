@@ -47,7 +47,7 @@ public class PerlinNoise : MonoBehaviour
                 //perlinNoise = Mathf.PerlinNoise(floai * refinement, j * refinement);
                 GameObject go = Instantiate(cube);
                 go.transform.localScale = new Vector3(cubeScale,cubeScale,cubeScale);
-                go.transform.position = new Vector3(i, 0.0f, j);
+                go.transform.position = new Vector3(i * cubeScale, 0.0f, j * cubeScale);
                 
 
                 cubes.Add(go);

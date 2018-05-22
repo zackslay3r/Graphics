@@ -8,7 +8,7 @@ public class StickyPlatforms : MonoBehaviour {
     // If the player hits a rotating platform, make it a child of the platform.
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.gameObject.tag == "platform")
+        if (hit.gameObject.tag == "Ground")
         {
             this.transform.parent = hit.transform;
         }

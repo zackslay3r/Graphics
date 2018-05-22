@@ -14,6 +14,7 @@ public class charControl : MonoBehaviour {
     public float maxGroundAngle = 120;
     public bool debug;
     public float oldY;
+    public float inputDelay = 0.05f;
 
     private Vector3 moveDirection = Vector3.zero;
 
@@ -21,7 +22,7 @@ public class charControl : MonoBehaviour {
     float jumpInput;
     float angle;
     float groundAngle;
-
+    float appliedGravity;
     public string JUMP_AXIS = "Jump";
 
     Quaternion targetRotation;
@@ -39,6 +40,7 @@ public class charControl : MonoBehaviour {
 
     CharacterController charController;
 
+    float turnInput;
 
     public float speed = 6.0F;
     public float jumpSpeed = 8.0F;
@@ -47,37 +49,101 @@ public class charControl : MonoBehaviour {
     CharacterController controller;
     void Start()
     {
+        turnInput = 0;
         controller = GetComponent<CharacterController>();
         zombie = GetComponent<Animator>();
+        targetRotation = transform.rotation;
+    }
+
+    private void FixedUpdate()
+    {
+        GetInput();
+        //Turn(); 
     }
 
     void Update()
     {
 
-        //if (Mathf.Abs(input.x) < 1 && Mathf.Abs(input.y) < 1)
+
+        //CalculateForward();
+        DrawDebugLines();
+        
+        if (Mathf.Abs(input.x) < 1 && Mathf.Abs(input.y) < 1)
+        {
+            zombie.SetBool("isRunning", false);
+            zombie.SetBool("isIdle", true);
+
+        }
+        else
+        {
+            zombie.SetBool("isRunning", true);
+            zombie.SetBool("isIdle", false);
+        }
+        if (controller.isGrounded)
+        {
+            //moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            moveDirection = new Vector3(0, 0, Input.GetAxis("Vertical"));
+
+            moveDirection = transform.TransformDirection(moveDirection);
+            moveDirection *= speed;
+            if (Input.GetButton("Jump"))
+            {
+                moveDirection.y = jumpSpeed;
+                transform.parent = null;
+            }
+           
+
+
+        }
+        
+        if (controller.isGrounded)
+        {
+            appliedGravity = 0;
+            moveDirection.y -= appliedGravity;
+        }
+        else
+        {
+            appliedGravity = gravity;
+            moveDirection.y -= appliedGravity * Time.deltaTime;
+        }
+
+        //Rotate();
+        //CalculateGroundAngle();
+        //if (groundAngle >= maxGroundAngle)
         //{
-        //    zombie.SetBool("isRunning", false);
-        //    zombie.SetBool("isIdle", true);
         //    return;
         //}
         //else
         //{
-        //    zombie.SetBool("isRunning", true);
-        //    zombie.SetBool("isIdle", false);
-        //}
-        if (controller.isGrounded)
-        {
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= speed;
-            if (Input.GetButton("Jump"))
-                moveDirection.y = jumpSpeed;
+        //transform.rotation = Quaternion.LookRotation(moveDirection);
 
-        }
-        moveDirection.y -= gravity * Time.deltaTime;
+       
         controller.Move(moveDirection * Time.deltaTime);
+        //}
+       
+        
     }
 
+    void GetInput()
+    {
+        input.x = Input.GetAxis("Horizontal");
+        input.y = Input.GetAxisRaw("Vertical");
+        jumpInput = Input.GetAxisRaw("Jump");
+        //turnInput = Input.GetAxis("Horizontal");
+
+        if (Input.GetKey("a"))
+        {
+            transform.Rotate(-Vector3.up,turnSpeed * Time.deltaTime);
+        }
+        if (Input.GetKey("d"))
+        {
+            transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
+        }
+    }
+    
+
+
+    
     //// Use this for initialization
     //void Start () {
     //       //cam = playercam.transform;
@@ -177,59 +243,60 @@ public class charControl : MonoBehaviour {
 
     //   }
 
-    //   void Move()
-    //   {
-    //       if(groundAngle >= maxGroundAngle)
-    //       {
-    //           return;
-    //       }
-    //       transform.position += forward * velocity * Time.deltaTime;
-    //       if (velocity > 0)
-    //       {
-    //           zombie.SetBool("isRunning", true);
-    //           zombie.SetBool("isIdle", false);
-    //       }
-    //       else
-    //       {
+    void Move()
+    {
+        if (groundAngle >= maxGroundAngle)
+        {
+            return;
+        }
+        transform.position += forward * velocity * Time.deltaTime;
+        if (velocity > 0)
+        {
+            zombie.SetBool("isRunning", true);
+            zombie.SetBool("isIdle", false);
+        }
+        else
+        {
 
-    //       }
-    //   }
+        }
+    }
 
-    //   void CalculateForward()
-    //   {
-    //       if (!grounded)
-    //       {
-    //           forward = transform.forward;
-    //           return;
-    //       }
-    //       forward = Vector3.Cross(transform.right, hitInfo.normal);
-    //   }
-    //   void CalculateGroundAngle()
-    //   {
-    //       if (!grounded)
-    //       {
-    //           groundAngle = 90;
-    //           return;
-    //       }
+ 
+    //void CalculateGroundAngle()
+    //{
+    //    if (!grounded)
+    //    {
+    //        groundAngle = 90;
+    //        return;
+    //    }
 
-    //       groundAngle = Vector3.Angle(hitInfo.normal, transform.forward);
-    //   }
+    //    groundAngle = Vector3.Angle(hitInfo.normal, transform.forward);
+    //}
+    void Turn()
+    {
+        if (Mathf.Abs(input.x) > inputDelay)
+        {
+            targetRotation *= Quaternion.AngleAxis(turnSpeed * input.x * Time.deltaTime, Vector3.up);
+        }
+        transform.rotation = targetRotation;
+    }
 
-    //   void CheckGround()
-    //   {
-    //       if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo, height + heightPadding, ground))
-    //       {
-    //           if (Vector3.Distance(transform.position, hitInfo.point) < height)
-    //           {
-    //               transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * height, 5 * Time.deltaTime);
-    //           }
-    //               grounded = true;
-    //       }
-    //       else
-    //       {
-    //           grounded = false;
-    //       }
-    //   }
+
+    void CheckGround()
+    {
+        if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo, height + heightPadding, ground))
+        {
+            if (Vector3.Distance(transform.position, hitInfo.point) < height)
+            {
+                transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * height, 5 * Time.deltaTime);
+            }
+            grounded = true;
+        }
+        else
+        {
+            grounded = false;
+        }
+    }
 
     //   void ApplyGravity()
     //   {
@@ -240,12 +307,12 @@ public class charControl : MonoBehaviour {
 
     //   }
 
-    //   void DrawDebugLines()
-    //   {
-    //       if (debug)
-    //       {
-    //           Debug.DrawLine(transform.position, transform.position + forward * height * 2, Color.blue);
-    //           Debug.DrawLine(transform.position, transform.position - Vector3.up * height, Color.green);
-    //       }
-    //   }
+    void DrawDebugLines()
+    {
+        if (debug)
+        {
+            Debug.DrawLine(transform.position, transform.position + forward * height * 2, Color.blue);
+            Debug.DrawLine(transform.position, transform.position - Vector3.up * height, Color.green);
+        }
+    }
 }
