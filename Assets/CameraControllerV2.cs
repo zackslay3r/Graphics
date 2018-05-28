@@ -39,12 +39,18 @@ public class CameraControllerV2 : MonoBehaviour {
         }
     }
 
-	// Update is called once per frame
-	void LateUpdate () {
-        MoveToTarget();
 
-        LookAtTarget();
-		
+    void FixedUpdate()
+    {
+
+    }
+
+    // Update is called once per frame
+    void LateUpdate () {
+      
+		MoveToTarget();
+
+        LookAtTarget(); 
 	}
 
     void MoveToTarget()

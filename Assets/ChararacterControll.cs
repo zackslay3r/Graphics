@@ -54,6 +54,7 @@ public class ChararacterControll : MonoBehaviour {
     Rigidbody rBody;
     CharacterController charController;
     float forwardInput, turnInput, jumpInput;
+   
 
     public Quaternion TargetRotation
     {
