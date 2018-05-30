@@ -5,6 +5,11 @@ class FlyCamera :
 {
 public:
 	FlyCamera();
+	float speed;
+	glm::vec3 up;
+
+	void update(float deltaTime);
+	void setSpeed(float speed);
 	~FlyCamera();
 };
 

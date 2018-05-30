@@ -31,34 +31,34 @@ public:
 	virtual void shutdown();
 
 	virtual void update(float deltaTime);
-	void processInput(GLFWwindow *window);
+	void processInput();
 
-	void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos);
-	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
-	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	//void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos);
+	//void cursor_position_callback(double xpos, double ypos);
+	//void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	virtual void draw();
 // Testing camera...
-glm::vec3 cameraPos = glm::vec3(0.0f, 5.0f, 3.0f);
-glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-
-float deltaTime = 0.0f;	// Time between current frame and last frame
-float lastFrame = 0.0f; // Time of last frame
-bool firstMouse;
-
-float lastX = 640;
-float lastY = 360;
-
-float yaw = 0.0f;
-float pitch = 0.0f;
-float fov = 45.0f;
+//glm::vec3 cameraPos = glm::vec3(0.0f, 5.0f, 3.0f);
+//glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+//glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+//glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+//glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+//glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+//glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+//
+//float deltaTime = 0.0f;	// Time between current frame and last frame
+//float lastFrame = 0.0f; // Time of last frame
+//bool firstMouse;
+//
+//float lastX = 640;
+//float lastY = 360;
+//
+//float yaw = 0.0f;
+//float pitch = 0.0f;
+//float fov = 45.0f;
 protected:
 	aie::Input* input;
-	GLFWwindow* window;
+	//GLFWwindow* window;
 	glm::mat4	m_view;
 	glm::mat4	m_projection;
 };
