@@ -27,6 +27,9 @@ protected:
 	glm::mat4	m_viewMatrix;
 	glm::mat4	m_projectionMatrix;
 	aie::ShaderProgram m_shader;
+	
 	aie::OBJMesh m_bunnyMesh;
+	aie::OBJMesh m_spearMesh;
 	glm::mat4 m_bunnyTransform;
+	glm::mat4 m_spearTransform;
 };

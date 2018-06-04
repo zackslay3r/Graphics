@@ -38,16 +38,29 @@ bool Application3D::startup() {
 		printf("Shader Error: %s\n", m_shader.getLastError());
 		return false;
 	}
-	if (m_bunnyMesh.load("./stanford/bunny.obj") == false) {
-		printf("Bunny Mesh Error!\n");
+	//if (m_bunnyMesh.load("./stanford/bunny.obj") == false) 
+	//{
+	//	printf("Bunny Mesh Error!\n");
+	//	return false;
+	//}
+	//m_bunnyTransform = {
+	//	0.5f,0,0,0,
+	//	0,0.5f,0,0,
+	//	0,0,0.5f,0,
+	//	0,0,0,1
+	//};
+
+	if (m_spearMesh.load("./stanford/soulspear.obj",
+		true, true) == false) {
+		printf("Soulspear Mesh Error!\n");
 		return false;
 	}
-	m_bunnyTransform = {
-		0.5f,0,0,0,
-		0,0.5f,0,0,
-		0,0,0.5f,0,
+	m_spearTransform = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
 		0,0,0,1
-	};
+	};
 	
 	// create simple camera transforms
 //	m_viewMatrix = camera->getView();
@@ -149,10 +162,14 @@ void Application3D::draw() {
 	// bind shader
 	m_shader.bind();
 	// bind transform
-	auto pvm = camera->projectionTransform * camera->viewTransform * m_bunnyTransform;
+	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
 	m_shader.bindUniform("ProjectionViewModel", pvm);
+	//m_texturedShader.bindUniform("ProjectViewModel", pvm);
 	// draw mesh
-	m_bunnyMesh.draw();
+	//m_bunnyMesh.draw();
+	// draw mesh
+	m_spearMesh.draw();
+	
 	// draw 2D gizmos using an orthogonal projection matrix (or screen dimensions)
 	Gizmos::draw2D((float)getWindowWidth(), (float)getWindowHeight());
 }

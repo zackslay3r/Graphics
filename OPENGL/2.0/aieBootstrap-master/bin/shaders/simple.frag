@@ -1,10 +1,8 @@
-// a simple flat colour shader
+// a simple textured shader
 #version 410
+in vec2 vTexCoord;
+uniform sampler2D diffuseTexture;
 out vec4 FragColour;
-
-uniform vec3 Kd;
-
 void main() {
-
-FragColour = vec4(Kd, 1);
+FragColour = texture( diffuseTexture, vTexCoord );
 }
