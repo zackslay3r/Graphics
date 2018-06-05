@@ -60,8 +60,11 @@ bool Application3D::startup() {
 		0,1,0,0,
 		0,0,1,0,
 		0,0,0,1
-	};
+	};
+
 	
+	
+
 	// create simple camera transforms
 //	m_viewMatrix = camera->getView();
 //	m_projectionMatrix = camera->getProjection();
@@ -85,6 +88,10 @@ void Application3D::update(float deltaTime) {
 	//camera->update(time);
 	// wipe the gizmos clean for this frame
 	
+	// rotate light
+	m_light.direction = glm::normalize(vec3(glm::cos(time * 2),
+		glm::sin(time * 2), 0));
+
 	camera->update(deltaTime);
 	// update perspective in case window resized
 	//m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
@@ -164,6 +171,10 @@ void Application3D::draw() {
 	// bind transform
 	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
 	m_shader.bindUniform("ProjectionViewModel", pvm);
+	//bind transforms for lighting
+	m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+
+	
 	//m_texturedShader.bindUniform("ProjectViewModel", pvm);
 	// draw mesh
 	//m_bunnyMesh.draw();

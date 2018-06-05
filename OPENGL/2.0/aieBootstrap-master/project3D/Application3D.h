@@ -32,4 +32,14 @@ protected:
 	aie::OBJMesh m_spearMesh;
 	glm::mat4 m_bunnyTransform;
 	glm::mat4 m_spearTransform;
+
+	struct Light
+	{
+		glm::vec3 direction;
+		glm::vec3 diffuse;
+		//glm::vec3
+	};
+
+	Light m_light;
+
 };
