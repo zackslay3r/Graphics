@@ -30,14 +30,26 @@ bool Application3D::startup() {
 	camera->setPerspective(glm::pi<float>() * 0.25f, 16.0f/9.0f, 0.1f, 1000.0f);
 	camera->setLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
 
+	
+	 //This is all for the simple shader.
 	m_shader.loadShader(aie::eShaderStage::VERTEX,
-		"./shaders/simple.vert");
+		"./shaders/phong.vert");
 	m_shader.loadShader(aie::eShaderStage::FRAGMENT,
-		"./shaders/simple.frag");
+		"./shaders/phong.frag");
 	if (m_shader.link() == false) {
 		printf("Shader Error: %s\n", m_shader.getLastError());
 		return false;
 	}
+
+	/*m_phongShader.loadShader(aie::eShaderStage::VERTEX, "shaders/phong.vert");
+	m_phongShader.loadShader(aie::eShaderStage::FRAGMENT, "shaders/phong.frag");
+	if (m_phongShader.link() == false) {
+		printf("Shader Error: %s\n", m_phongShader.getLastError());
+		return false;
+	}*/
+	
+
+
 	//if (m_bunnyMesh.load("./stanford/bunny.obj") == false) 
 	//{
 	//	printf("Bunny Mesh Error!\n");
@@ -63,7 +75,13 @@ bool Application3D::startup() {
 	};
 
 	
-	
+	//Set the light variables.
+	m_light.diffuse = { 1,1,0 };
+	m_light.specular = { 1,1,0 };
+	m_ambientLight = { 0.25f,0.25f,0.25f };
+
+
+
 
 	// create simple camera transforms
 //	m_viewMatrix = camera->getView();
@@ -79,7 +97,7 @@ void Application3D::shutdown() {
 void Application3D::update(float deltaTime) {
 
 	// query time since application started
-	dt = deltaTime;
+	//dt = deltaTime;
 	float time = getTime();
 
 	// rotate camera
@@ -166,20 +184,50 @@ void Application3D::draw() {
 	// draw 3D gizmos
 	Gizmos::draw(camera->getProjectionView());
 
-	// bind shader
-	m_shader.bind();
-	// bind transform
+
+	/////SIMPLE SHADER.
+	//// bind shader
+	//m_shader.bind();
+	//// bind transform
+	//auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
+	//m_shader.bindUniform("ProjectionViewModel", pvm);
+	////draw mesh.
+	//m_spearMesh.draw();
+	
+
+	//Phong Shader + Light.
+	//bind shader
+	m_phongShader.bind();
+
+	//bind transform
 	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
-	m_shader.bindUniform("ProjectionViewModel", pvm);
+	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+
 	//bind transforms for lighting
-	m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	m_phongShader.bindUniform("Ia", m_ambientLight);
+	m_phongShader.bindUniform("Id", m_light.diffuse);
+	m_phongShader.bindUniform("Is", m_light.specular);
+	m_phongShader.bindUniform("lightDirection", m_light.direction);
+
+
+	
+	//// bind transform
+	//auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
+	//m_shader.bindUniform("ProjectionViewModel", pvm);
+	////bind transforms for lighting
+	//m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	// bind transform
+	
+	// draw mesh
+	//m_spearMesh.draw();
 
 	
 	//m_texturedShader.bindUniform("ProjectViewModel", pvm);
 	// draw mesh
 	//m_bunnyMesh.draw();
 	// draw mesh
-	m_spearMesh.draw();
+	
 	
 	// draw 2D gizmos using an orthogonal projection matrix (or screen dimensions)
 	Gizmos::draw2D((float)getWindowWidth(), (float)getWindowHeight());

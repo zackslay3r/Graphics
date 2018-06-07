@@ -27,6 +27,7 @@ protected:
 	glm::mat4	m_viewMatrix;
 	glm::mat4	m_projectionMatrix;
 	aie::ShaderProgram m_shader;
+	aie::ShaderProgram m_phongShader;
 	
 	aie::OBJMesh m_bunnyMesh;
 	aie::OBJMesh m_spearMesh;
@@ -37,9 +38,11 @@ protected:
 	{
 		glm::vec3 direction;
 		glm::vec3 diffuse;
+		glm::vec3 specular;
 		//glm::vec3
 	};
 
 	Light m_light;
+	glm::vec3 m_ambientLight;
 
 };
