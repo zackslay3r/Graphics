@@ -21,6 +21,7 @@ public:
 	void setPosition(glm::vec3 position);
 	glm::mat4 getWorldTransform();
 	glm::mat4 getView();
+	glm::vec4 getPosition();
 	glm::mat4 getProjection();
 	glm::mat4 getProjectionView();
 	void updateProjectionViewTransform();

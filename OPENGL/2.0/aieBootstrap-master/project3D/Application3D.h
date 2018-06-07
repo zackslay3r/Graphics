@@ -37,9 +37,9 @@ protected:
 	struct Light
 	{
 		glm::vec3 direction;
-		//glm::vec3 diffuse;
-		//glm::vec3 specular;
-		//glm::vec3
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+	
 	};
 
 	Light m_light;

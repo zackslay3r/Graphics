@@ -30,6 +30,11 @@ glm::mat4 Camera::getView()
 	return viewTransform;
 }
 
+glm::vec4 Camera::getPosition()
+{
+	return viewTransform[3];
+}
+
 glm::mat4 Camera::getProjection()
 {
 	return projectionTransform;
