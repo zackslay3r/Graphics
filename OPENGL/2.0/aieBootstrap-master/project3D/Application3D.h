@@ -26,7 +26,7 @@ protected:
 	FlyCamera* camera;
 	glm::mat4	m_viewMatrix;
 	glm::mat4	m_projectionMatrix;
-	aie::ShaderProgram m_shader;
+	/*aie::ShaderProgram m_shader;*/
 	aie::ShaderProgram m_phongShader;
 	
 	aie::OBJMesh m_bunnyMesh;
@@ -37,8 +37,8 @@ protected:
 	struct Light
 	{
 		glm::vec3 direction;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
+		//glm::vec3 diffuse;
+		//glm::vec3 specular;
 		//glm::vec3
 	};
 

@@ -31,22 +31,22 @@ bool Application3D::startup() {
 	camera->setLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
 
 	
-	 //This is all for the simple shader.
-	m_shader.loadShader(aie::eShaderStage::VERTEX,
-		"./shaders/phong.vert");
-	m_shader.loadShader(aie::eShaderStage::FRAGMENT,
-		"./shaders/phong.frag");
-	if (m_shader.link() == false) {
-		printf("Shader Error: %s\n", m_shader.getLastError());
-		return false;
-	}
+	// This is all for the simple shader.
+	//m_shader.loadShader(aie::eShaderStage::VERTEX,
+	//	"./shaders/simple.vert");
+	//m_shader.loadShader(aie::eShaderStage::FRAGMENT,
+	//	"./shaders/simple.frag");
+	//if (m_shader.link() == false) {
+	//	printf("Shader Error: %s\n", m_shader.getLastError());
+	//	return false;
+	//}
 
-	/*m_phongShader.loadShader(aie::eShaderStage::VERTEX, "shaders/phong.vert");
+	m_phongShader.loadShader(aie::eShaderStage::VERTEX, "shaders/phong.vert");
 	m_phongShader.loadShader(aie::eShaderStage::FRAGMENT, "shaders/phong.frag");
 	if (m_phongShader.link() == false) {
 		printf("Shader Error: %s\n", m_phongShader.getLastError());
 		return false;
-	}*/
+	}
 	
 
 
@@ -76,8 +76,8 @@ bool Application3D::startup() {
 
 	
 	//Set the light variables.
-	m_light.diffuse = { 1,1,0 };
-	m_light.specular = { 1,1,0 };
+	//m_light.diffuse = { 1,1,0 };
+	//m_light.specular = { 1,1,0 };
 	m_ambientLight = { 0.25f,0.25f,0.25f };
 
 
@@ -97,8 +97,10 @@ void Application3D::shutdown() {
 void Application3D::update(float deltaTime) {
 
 	// query time since application started
-	//dt = deltaTime;
 	float time = getTime();
+	// rotate light
+	m_light.direction = glm::normalize(vec3(glm::cos(time * 2),
+		glm::sin(time * 2), 0));
 
 	// rotate camera
 	//m_viewMatrix = glm::lookAt(vec3(glm::sin(time) * 10, 10, glm::cos(time) * 10),
@@ -106,9 +108,7 @@ void Application3D::update(float deltaTime) {
 	//camera->update(time);
 	// wipe the gizmos clean for this frame
 	
-	// rotate light
-	m_light.direction = glm::normalize(vec3(glm::cos(time * 2),
-		glm::sin(time * 2), 0));
+
 
 	camera->update(deltaTime);
 	// update perspective in case window resized
@@ -200,27 +200,34 @@ void Application3D::draw() {
 	m_phongShader.bind();
 
 	//bind transform
-	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
-	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
 
 	//bind transforms for lighting
-	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	m_phongShader.bindUniform("lightDirection", m_light.direction);
+	
+	
+	// bind transform
+	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
+	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	// bind transforms for lighting
+	m_phongShader.bindUniform("NormalMatrix",
+	glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	/*m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
 	m_phongShader.bindUniform("Ia", m_ambientLight);
 	m_phongShader.bindUniform("Id", m_light.diffuse);
-	m_phongShader.bindUniform("Is", m_light.specular);
-	m_phongShader.bindUniform("lightDirection", m_light.direction);
-
+	m_phongShader.bindUniform("Is", m_light.specular);*/
 
 	
-	//// bind transform
-	//auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
-	//m_shader.bindUniform("ProjectionViewModel", pvm);
-	////bind transforms for lighting
-	//m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
 	// bind transform
+//	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
+//	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//bind transforms for lighting
+//	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	//bind transform
 	
 	// draw mesh
-	//m_spearMesh.draw();
+	m_spearMesh.draw();
 
 	
 	//m_texturedShader.bindUniform("ProjectViewModel", pvm);
