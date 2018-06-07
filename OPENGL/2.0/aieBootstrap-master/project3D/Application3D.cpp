@@ -28,7 +28,7 @@ bool Application3D::startup() {
 	camera = new FlyCamera();
 
 	camera->setPerspective(glm::pi<float>() * 0.25f, 16.0f/9.0f, 0.1f, 1000.0f);
-	camera->setLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
+	camera->setLookAt(vec3(5, 5, 5), vec3(0), vec3(0, 1, 0));
 
 	
 	// This is all for the simple shader.
@@ -209,7 +209,8 @@ void Application3D::draw() {
 	m_phongShader.bindUniform("Id", m_light.diffuse);
 	m_phongShader.bindUniform("Is", m_light.specular);
 	m_phongShader.bindUniform("lightDirection", m_light.direction);
-
+	m_phongShader.bindUniform("cameraPosition",
+		vec3(glm::inverse(camera->viewTransform)[3]));
 
 	
 	// bind transform
