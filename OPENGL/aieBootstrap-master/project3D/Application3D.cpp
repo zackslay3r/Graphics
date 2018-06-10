@@ -25,10 +25,12 @@ bool Application3D::startup() {
 	Gizmos::create(10000, 10000, 10000, 10000);
 
 	// create simple camera transforms
-	m_viewMatrix = glm::lookAt(vec3(10), vec3(0), vec3(0, 1, 0));
-	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
-										  getWindowWidth() / (float)getWindowHeight(),
-										  0.1f, 1000.f);
+	//m_viewMatrix = camera.GetViewMatrix();
+	//m_projectionMatrix = camera.GetProjectionMatrix();
+		
+		///glm::perspective(glm::pi<float>() * 0.25f,
+		///								  getWindowWidth() / (float)getWindowHeight(),
+		///								  0.1f, 1000.f);
 
 	return true;
 }
@@ -43,9 +45,11 @@ void Application3D::update(float deltaTime) {
 	// query time since application started
 	float time = getTime();
 
+
+	camera.Update(aie::Application::getWindowWidth(),aie::Application::getWindowHeight(),time);
 	// rotate camera
-	m_viewMatrix = glm::lookAt(vec3(glm::sin(time) * 10, 10, glm::cos(time) * 10),
-							   vec3(0), vec3(0, 1, 0));
+	//m_viewMatrix = glm::lookAt(vec3(glm::sin(time) * 10, 10, glm::cos(time) * 10),
+	//						   vec3(0), vec3(0, 1, 0));
 
 	// wipe the gizmos clean for this frame
 	Gizmos::clear();
@@ -93,13 +97,13 @@ void Application3D::draw() {
 	// wipe the screen to the background colour
 	clearScreen();
 
-	// update perspective in case window resized
-	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
-										  getWindowWidth() / (float)getWindowHeight(),
-										  0.1f, 1000.f);
+	//// update perspective in case window resized
+	//camera.m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
+	//									  getWindowWidth() / (float)getWindowHeight(),
+	//									  0.1f, 1000.f);
 
 	// draw 3D gizmos
-	Gizmos::draw(m_projectionMatrix * m_viewMatrix);
+	Gizmos::draw(camera.GetCameraMatrix());
 
 	// draw 2D gizmos using an orthogonal projection matrix (or screen dimensions)
 	Gizmos::draw2D((float)getWindowWidth(), (float)getWindowHeight());

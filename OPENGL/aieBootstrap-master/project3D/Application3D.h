@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include <glm/mat4x4.hpp>
+#include "Camera.h"
 
 class Application3D : public aie::Application {
 public:
@@ -14,6 +15,8 @@ public:
 
 	virtual void update(float deltaTime);
 	virtual void draw();
+
+	Camera camera;
 
 protected:
 

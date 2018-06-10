@@ -23,7 +23,7 @@ public:
 	float dt;
 protected:
 
-	FlyCamera* camera;
+	Camera camera;
 	glm::mat4	m_viewMatrix;
 	glm::mat4	m_projectionMatrix;
 	/*aie::ShaderProgram m_shader;*/

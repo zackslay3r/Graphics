@@ -25,10 +25,7 @@ bool Application3D::startup() {
 	Gizmos::create(10000, 10000, 10000, 10000);
 
 									
-	camera = new FlyCamera();
-
-	camera->setPerspective(glm::pi<float>() * 0.25f, 16.0f/9.0f, 0.1f, 1000.0f);
-	camera->setLookAt(vec3(5, 5, 5), vec3(0), vec3(0, 1, 0));
+	
 
 	
 	// This is all for the simple shader.
@@ -96,21 +93,24 @@ void Application3D::shutdown() {
 
 void Application3D::update(float deltaTime) {
 
-	// query time since application started
-	//dt = deltaTime;
+	//// query time since application started
+	////dt = deltaTime;
 	float time = getTime();
 
-	// rotate camera
-	//m_viewMatrix = glm::lookAt(vec3(glm::sin(time) * 10, 10, glm::cos(time) * 10),
-	//						   vec3(0), vec3(0, 1, 0));
+	//// rotate camera
+	//camera.Update(aie::Application::getWindowWidth(), aie::Application::getWindowHeight(), time);
+	/*camera->viewTransform = glm::lookAt(vec3(glm::sin(time) * 5, 5, glm::cos(time) * 5),
+							   vec3(0), vec3(0, 1, 0));*/
 	//camera->update(time);
 	// wipe the gizmos clean for this frame
 	
+	
+	Gizmos::clear();
 	// rotate light
 	m_light.direction = glm::normalize(vec3(glm::cos(time * 2),
 		glm::sin(time * 2), 0));
 
-	camera->update(deltaTime);
+	
 	// update perspective in case window resized
 	//m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
 	//								  getWindowWidth() / (float)getWindowHeight(),
@@ -120,9 +120,9 @@ void Application3D::update(float deltaTime) {
 	//	0.1f, 1000.f);
 
 	// draw 3D gizmos
-	Gizmos::draw(camera->getProjectionView());
+	/*Gizmos::draw(camera.GetProjectionMatrix() * camera.GetViewMatrix());*/
 	
-	Gizmos::clear();
+	
 
 	// draw a simple grid with gizmos
 	vec4 white(1);
@@ -172,18 +172,24 @@ void Application3D::draw() {
 	// wipe the screen to the background colour
 	clearScreen();
 
-	camera->update(dt);
-	// update perspective in case window resized
-	//m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
-		//								  getWindowWidth() / (float)getWindowHeight(),
-		//								  0.1f, 1000.f);
-	camera->setPerspective(glm::pi<float>() * 0.25f,
-		getWindowWidth() / (float)getWindowHeight(),
-		0.1f, 1000.f);
+	float time = getTime();
+
+	// rotate camera
+	camera.Update(aie::Application::getWindowWidth(), aie::Application::getWindowHeight(), time);
+	//camera->update(dt);
+	//// update perspective in case window resized
+	////m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
+	//	//								  getWindowWidth() / (float)getWindowHeight(),
+	//	//								  0.1f, 1000.f);
+	//camera->setPerspective(glm::pi<float>() * 0.25f,
+	//	getWindowWidth() / (float)getWindowHeight(),
+	//	0.1f, 1000.f);
+
+	//// draw 3D gizmos
+	//Gizmos::draw(camera->getProjectionView());
 
 	// draw 3D gizmos
-	Gizmos::draw(camera->getProjectionView());
-
+	Gizmos::draw(camera.GetCameraMatrix());
 
 	/////SIMPLE SHADER.
 	//// bind shader
@@ -200,7 +206,7 @@ void Application3D::draw() {
 	m_phongShader.bind();
 
 	//bind transform
-	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
+	auto pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_spearTransform;
 	m_phongShader.bindUniform("ProjectionViewModel", pvm);
 
 	//bind transforms for lighting
@@ -210,7 +216,7 @@ void Application3D::draw() {
 	m_phongShader.bindUniform("Is", m_light.specular);
 	m_phongShader.bindUniform("lightDirection", m_light.direction);
 	m_phongShader.bindUniform("cameraPosition",
-		vec3(glm::inverse(camera->viewTransform)[3]));
+		vec3(glm::inverse(camera.GetViewMatrix())[3]));
 
 	
 	// bind transform
