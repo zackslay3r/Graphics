@@ -26,13 +26,18 @@ protected:
 	Camera camera;
 	glm::mat4	m_viewMatrix;
 	glm::mat4	m_projectionMatrix;
-	/*aie::ShaderProgram m_shader;*/
+	aie::ShaderProgram m_shader;
 	aie::ShaderProgram m_phongShader;
-	
+	aie::ShaderProgram m_toonShader;
+
 	aie::OBJMesh m_bunnyMesh;
 	aie::OBJMesh m_spearMesh;
+	aie::OBJMesh m_phongSpear;
+	aie::OBJMesh m_toonSpear;
 	glm::mat4 m_bunnyTransform;
 	glm::mat4 m_spearTransform;
+	glm::mat4 m_spearPhongTransform;
+	glm::mat4 m_toonSpearTransform;
 
 	struct Light
 	{
@@ -42,6 +47,9 @@ protected:
 	
 	};
 
+
+	float roughness;
+	float reflectionCoefficent;
 	Light m_light;
 	glm::vec3 m_ambientLight;
 
