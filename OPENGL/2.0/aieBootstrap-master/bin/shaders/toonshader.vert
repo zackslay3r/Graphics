@@ -1,20 +1,27 @@
-//
-// Vertex shader for cartoon-style shading
-//
-// Author: Philip Rideout
-//
-// Copyright (c) 2005-2006 3Dlabs Inc. Ltd.
-//
-// See 3Dlabs-License.txt for license information
-//
+// a normal map vertex shader
+#version 410
+layout( location = 0 ) in vec4 Position;
+layout( location = 1 ) in vec4 Normal;
+layout( location = 2 ) in vec2 TexCoord;
+layout( location = 3 ) in vec4 Tangent;
 
-varying vec3 Normal;
+out vec2 vTexCoord;
+out vec3 vNormal;
+out vec3 vTangent;
+out vec3 vBiTangent;
+out vec4 vPosition;
+uniform mat4 ProjectionViewModel;
+uniform mat3 NormalMatrix;
 
-void main(void)
-{
-    Normal = normalize(gl_NormalMatrix * gl_Normal);
-    #ifdef __GLSL_CG_DATA_TYPES // Fix clipping for Nvidia and ATI
-    gl_ClipVertex = gl_ModelViewMatrix * gl_Vertex;
-    #endif
-    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+// we need the model matrix seperate
+uniform mat4 ModelMatrix;
+// we need this matrix to transform the normal
+//uniform mat3 NormalMatrix;
+void main() {
+vTexCoord = TexCoord;
+vPosition = ModelMatrix * Position;
+vNormal = NormalMatrix * Normal.xyz;
+vTangent = NormalMatrix * Tangent.xyz;
+vBiTangent = cross(vNormal, vTangent) * Tangent.w;
+gl_Position = ProjectionViewModel * Position;
 }

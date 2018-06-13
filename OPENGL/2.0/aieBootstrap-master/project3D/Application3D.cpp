@@ -40,7 +40,7 @@ bool Application3D::startup() {
 
 	// This is all for the simple shader.
 	m_toonShader.loadShader(aie::eShaderStage::VERTEX,
-		"./shaders/normalmap.vert");
+		"./shaders/toonshader.vert");
 	m_toonShader.loadShader(aie::eShaderStage::FRAGMENT,
 		"./shaders/toonshader.frag");
 	if (m_toonShader.link() == false) {
@@ -96,7 +96,7 @@ bool Application3D::startup() {
 		1,0,0,0,
 		0,1,0,0,
 		0,0,1,0,
-		2.25,0,0,1
+		-2.5,0,0,1
 	};
 	
 	//Set the light variables.
@@ -294,9 +294,9 @@ void Application3D::draw() {
 	
 	m_toonShader.bind();
 	pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_toonSpearTransform;
-	m_shader.bindUniform("ProjectionViewModel", pvm);
+	m_toonShader.bindUniform("ProjectionViewModel", pvm);
 	m_toonShader.bindUniform("lightDir", m_light.direction);
-
+	m_toonShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_toonSpearTransform)));
 	m_toonSpear.draw();
 
 
