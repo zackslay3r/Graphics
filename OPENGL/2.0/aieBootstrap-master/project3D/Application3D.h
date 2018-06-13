@@ -48,6 +48,10 @@ protected:
 	};
 
 
+
+
+	glm::vec3 lightPos;
+	glm::vec3 colour;
 	float roughness;
 	float reflectionCoefficent;
 	Light m_light;

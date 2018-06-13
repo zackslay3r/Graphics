@@ -26,6 +26,8 @@ bool Application3D::startup() {
 
 	reflectionCoefficent = 0.1f;
 	
+	lightPos = { 0,-3,1 };
+	colour = { 0,0,1 };
 
 	
 	// This is all for the simple shader.
@@ -100,9 +102,9 @@ bool Application3D::startup() {
 	};
 	
 	//Set the light variables.
-	m_light.diffuse = { 1,1,1 };
-	m_light.specular = { 1,1,1 };
-	m_ambientLight = { 1.0f,1.0f,1.0f };
+	m_light.diffuse = { 0,0,0 };
+	m_light.specular = { 0,0,0 };
+	m_ambientLight = { 0.2f,0.2f,0.2f };
 
 	if (m_phongSpear.load("./stanford/soulspear.obj",
 		true, true) == false) {
@@ -177,7 +179,8 @@ void Application3D::update(float deltaTime) {
 
 	// demonstrate a few shapes
 	//Gizmos::addAABBFilled(vec3(0), vec3(1), vec4(0, 0.5f, 1, 0.25f));
-	//Gizmos::addSphere(vec3(5, 0, 5), 1, 8, 8, vec4(1, 0, 0, 0.5f));
+	Gizmos::addSphere(lightPos, 0.1, 8, 8, vec4(1, 0, 0, 0.5f));
+	
 	//Gizmos::addRing(vec3(5, 0, -5), 1, 1.5f, 8, vec4(0, 1, 0, 1));
 	//Gizmos::addDisk(vec3(-5, 0, 5), 1, 16, vec4(1, 1, 0, 1));
 	//Gizmos::addArc(vec3(-5, 0, -5), 0, 2, 1, 8, vec4(1, 0, 1, 1));
@@ -255,7 +258,8 @@ void Application3D::draw() {
 	m_phongShader.bindUniform("cameraPosition",
 		vec3(glm::inverse(camera.GetViewMatrix())[3]));
 	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearPhongTransform)));
-	
+	m_phongShader.bindUniform("lightPosition", lightPos);
+	m_phongShader.bindUniform("colour", colour);
 
 
 
@@ -282,6 +286,9 @@ void Application3D::draw() {
 	m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
 	m_shader.bindUniform("roughness", roughness);
 	m_shader.bindUniform("reflectionCoefficient", reflectionCoefficent);
+
+
+
 	// bind transform
 //	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
 //	m_phongShader.bindUniform("ProjectionViewModel", pvm);
