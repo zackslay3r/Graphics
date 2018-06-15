@@ -4,12 +4,15 @@
 	}
 		CGINCLUDE
 
-		half _Threshold;
-
+		half4 _Filter;
+		half _Intensity;
 
 	half3 Prefilter(half3 c) {
 		half brightness = max(c.r, max(c.g, c.b));
-		half contribution = max(0, brightness - _Threshold);
+		half soft = brightness - _Filter.y;
+		soft = clamp(soft, 0, _Filter.z);
+		soft = soft * soft * _Filter.w;
+		half contribution = max(soft, brightness - _Filter.x);
 		contribution /= max(brightness, 0.00001);
 		return c * contribution;
 	}
@@ -91,8 +94,18 @@
 
 		half4 FragmentProgram(Interpolators i) : SV_Target{
 		half4 c = tex2D(_SourceTex, i.uv);
-		c.rgb += SampleBox(i.uv, 0.5);
+		c.rgb += _Intensity * SampleBox(i.uv, 0.5);
 		return c;
+	}
+		ENDCG
+	}
+		Pass{ // 4
+		CGPROGRAM
+#pragma vertex VertexProgram
+#pragma fragment FragmentProgram
+
+		half4 FragmentProgram(Interpolators i) : SV_Target{
+		return half4(_Intensity * SampleBox(i.uv, 0.5), 1);
 	}
 		ENDCG
 	}

@@ -4,8 +4,13 @@ using System;
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class BloomEffect : MonoBehaviour
 {
+    public bool ShowBloomOnly;
+    [Range(0, 10)]
+    public float intensity = 1;
     [Range(0, 10)]
     public float threshold = 1;
+    [Range(0, 1)]
+    public float softThreshold = 0.5f;
     [Range(1, 16)]
     public int iterations = 1;
     public Shader bloomShader;
@@ -15,6 +20,7 @@ public class BloomEffect : MonoBehaviour
     const int BoxDownPass = 1;
 	const int BoxUpPass = 2;
     const int ApplyBloomPass = 3;
+    const int ShowBloomOnlyPass = 4;
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         if (bloom == null)
@@ -22,14 +28,23 @@ public class BloomEffect : MonoBehaviour
             bloom = new Material(bloomShader);
             bloom.hideFlags = HideFlags.HideAndDontSave;
         }
-        bloom.SetFloat("_Threshold", threshold);
+        float knee = threshold * softThreshold;
+        Vector4 filter;
+        filter.x = threshold;
+        filter.y = filter.x - knee;
+        filter.z = 2f * knee;
+        filter.w = 0.25f / (knee + 0.00001f);
+        bloom.SetVector("_Filter", filter);
+        bloom.SetFloat("_Intensity", Mathf.GammaToLinearSpace(intensity));
         int width = source.width / 2;
         int height = source.height / 2;
         RenderTextureFormat format = source.format;
         RenderTexture[] textures = new RenderTexture[16];
         RenderTexture currentDestination = textures[0] = RenderTexture.GetTemporary(width, height, 0, format);
-        
+
         //Graphics.Blit(source, destination);
+
+
         Graphics.Blit(source, currentDestination, bloom, BoxDownPrefilterPass);
         RenderTexture currentSource = currentDestination;
 
@@ -60,7 +75,14 @@ public class BloomEffect : MonoBehaviour
 
 
         bloom.SetTexture("_SourceTex", source);
-        Graphics.Blit(currentSource, destination, bloom, ApplyBloomPass);
-        RenderTexture.ReleaseTemporary(currentSource);
+        if (ShowBloomOnly)
+        {
+            Graphics.Blit(currentSource, destination, bloom, ShowBloomOnlyPass);
+        }
+        else
+        {
+            Graphics.Blit(currentSource, destination, bloom, ApplyBloomPass);
+            RenderTexture.ReleaseTemporary(currentSource);
+        }
     }
 }
