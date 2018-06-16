@@ -34,6 +34,14 @@ public class ChararacterControll : MonoBehaviour {
     bool Grounded()
     {
         bool grounded = Physics.Raycast(transform.position, Vector3.down, moveSetting.distToGrounded, moveSetting.ground);
+        if (grounded)
+        {
+            anim.SetBool("onAir", false);
+        }
+        else
+        {
+            anim.SetBool("onAir", true);
+        }
         return grounded;
     }
 
@@ -87,6 +95,17 @@ public class ChararacterControll : MonoBehaviour {
         turnInput = Input.GetAxis(inputSetting.TURN_AXIS);
         jumpInput = Input.GetAxisRaw(inputSetting.JUMP_AXIS);
 
+        // if forwardInput is negative, we want a different animation running.
+        if (forwardInput < -0.05)
+        {
+            anim.SetBool("walkBackwards", true);
+        }
+        else
+        {
+            anim.SetBool("walkBackwards", false);
+        }
+
+
         float animValue = Mathf.Abs(forwardInput) + Mathf.Abs(turnInput);
 
 
@@ -132,8 +151,12 @@ public class ChararacterControll : MonoBehaviour {
 
     void Run()
     {
+        
         if (Mathf.Abs(forwardInput) > inputSetting.inputDelay)
         {
+           
+
+
             //move
             //rBody.velocity = transform.forward * forwardInput * moveSetting.forwardVel;
             velocity.z = moveSetting.forwardVel * forwardInput;

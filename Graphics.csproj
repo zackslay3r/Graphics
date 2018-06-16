@@ -346,6 +346,7 @@
     <Compile Include="Assets\Scripts\World\StickyPlatforms.cs" />
     <Compile Include="Assets\Scripts\World\Text.cs" />
     <Compile Include="Assets\TerrainGenerator.cs" />
+    <Compile Include="Assets\UIScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Bloom.shader" />
