@@ -12,6 +12,7 @@ public class ChararacterControll : MonoBehaviour {
     public float jumpVel = 25;
     public float distToGrounded = 0.8f;
     public LayerMask ground;
+        
     }
 
     [System.Serializable]
@@ -32,7 +33,8 @@ public class ChararacterControll : MonoBehaviour {
 
     bool Grounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, moveSetting.distToGrounded, moveSetting.ground);
+        bool grounded = Physics.Raycast(transform.position, Vector3.down, moveSetting.distToGrounded, moveSetting.ground);
+        return grounded;
     }
 
     public float height = 0.5f;
@@ -54,7 +56,8 @@ public class ChararacterControll : MonoBehaviour {
     Rigidbody rBody;
     CharacterController charController;
     float forwardInput, turnInput, jumpInput;
-   
+    Animator anim;
+    public bool onGround;
 
     public Quaternion TargetRotation
     {
@@ -65,7 +68,7 @@ public class ChararacterControll : MonoBehaviour {
 	void Start () {
         targetRotation = transform.rotation;
         charController = GetComponent<CharacterController>();
-        
+        anim = GetComponent<Animator>();
 
         if (GetComponent<Rigidbody>())
         {
@@ -84,6 +87,10 @@ public class ChararacterControll : MonoBehaviour {
         turnInput = Input.GetAxis(inputSetting.TURN_AXIS);
         jumpInput = Input.GetAxisRaw(inputSetting.JUMP_AXIS);
 
+        float animValue = Mathf.Abs(forwardInput) + Mathf.Abs(turnInput);
+
+
+        anim.SetFloat("Forward", animValue, .1f, Time.deltaTime);
     }
 
 
@@ -94,6 +101,20 @@ public class ChararacterControll : MonoBehaviour {
         Turn();
         
 	}
+    void OnCollisionEnter(Collision other)
+    {
+        onGround = true;
+        rBody.drag = 5;
+        anim.SetBool("onAir", false);
+        anim.SetTrigger("HitGround");
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        onGround = false;
+        rBody.drag = 5;
+        anim.SetBool("onAir", true);
+    }
 
     void FixedUpdate()
     {
@@ -135,11 +156,11 @@ public class ChararacterControll : MonoBehaviour {
 
     void Jump()
     {
-        if (jumpInput > 0 && Grounded())
+        if (jumpInput > 0 && onGround)
         {
             velocity.y = moveSetting.jumpVel;
         }
-        else if (jumpInput == 0 && Grounded())
+        else if (jumpInput == 0 && onGround)
         {
             velocity.y = 0;
         }
