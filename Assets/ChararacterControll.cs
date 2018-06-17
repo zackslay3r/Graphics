@@ -11,6 +11,7 @@ public class ChararacterControll : MonoBehaviour {
     public float rotateVel = 100;
     public float jumpVel = 25;
     public float distToGrounded = 0.8f;
+    
     public LayerMask ground;
         
     }
@@ -31,25 +32,73 @@ public class ChararacterControll : MonoBehaviour {
         public string JUMP_AXIS = "Jump";
     }
 
-    bool Grounded()
+    void Grounded()
     {
-        bool grounded = Physics.Raycast(transform.position, Vector3.down, moveSetting.distToGrounded, moveSetting.ground);
-        if (grounded)
+        platformCount = 0;
+        //bool grounded = 
+        //Physics.Raycast(transform.position,Vector3.down,out hit,100.0f,moveSetting.ground);
+        if (debug)
+        {
+            Vector3 debugDistance = Vector3.down * moveSetting.distToGrounded;
+            Debug.DrawRay(transform.position, debugDistance, Color.red);
+        }
+
+        float distanceToPoints = collider.height / 2 - collider.radius;
+        Vector3 p1 = transform.position + collider.center + Vector3.up * distanceToPoints;
+        Vector3 p2 = transform.position + collider.center - Vector3.up * distanceToPoints;
+
+        float castDistance = moveSetting.distToGrounded;
+
+        float radius = collider.radius;
+
+        
+
+        RaycastHit[] hits = Physics.CapsuleCastAll(p1,p2,radius,Vector3.down,castDistance);
+        
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.distance < moveSetting.distToGrounded && hit.transform.tag != "Player")
+            {
+                platformCount++;
+            }
+
+        }
+        if (platformCount > 0)
         {
             anim.SetBool("onAir", false);
+            //anim.SetBool("onAir", false);
+            anim.SetBool("hitGround", true);
         }
         else
         {
-            anim.SetBool("onAir", true);
+                anim.SetBool("onAir", true);
+                anim.SetBool("hitGround", false);
         }
-        return grounded;
-    }
+        //if (hit.distance < moveSetting.distToGrounded)
+        //{
+        //    //anim.SetBool("onAir", false);
+        //    anim.SetBool("onAir", false);
+        //    anim.SetBool("hitGround", true);
 
+        //    //return true;
+        //}
+        //else
+        //{
+        //    anim.SetBool("onAir", true);
+        //    anim.SetBool("hitGround", false);
+
+        //    //return false;
+        //    //anim.SetBool("onAir", true);
+        //}
+
+    }
+    private bool cooldown = false;
     public float height = 0.5f;
     public float heightPadding = 0.05f;
     public float maxGroundAngle = 120f;
     public bool debug;
-
+    public int currentPlatformsTouching = 0;
+    public int platformCount;
     float groundAngle;
 
 
@@ -63,9 +112,10 @@ public class ChararacterControll : MonoBehaviour {
     Quaternion targetRotation;
     Rigidbody rBody;
     CharacterController charController;
+    CapsuleCollider collider;
     float forwardInput, turnInput, jumpInput;
     Animator anim;
-    public bool onGround;
+   
 
     public Quaternion TargetRotation
     {
@@ -77,6 +127,7 @@ public class ChararacterControll : MonoBehaviour {
         targetRotation = transform.rotation;
         charController = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        collider = GetComponent<CapsuleCollider>();
 
         if (GetComponent<Rigidbody>())
         {
@@ -118,21 +169,33 @@ public class ChararacterControll : MonoBehaviour {
     {
         GetInput();
         Turn();
-        
+        // want to check if we are grounded and if we are, then we want to make sure appropirate values are being set. 
+        Grounded();
+
+
 	}
     void OnCollisionEnter(Collision other)
     {
-        onGround = true;
-        rBody.drag = 5;
-        anim.SetBool("onAir", false);
-        anim.SetTrigger("HitGround");
+        //onGround = true;
+        //rBody.drag = 5;
+        //anim.SetBool("onAir", false);
+        //anim.SetBool("hitGround", true);
+      //  currentPlatformsTouching++;
+
+        //    if(Grounded())
+        //{
+            
+            //rBody.drag = 5;
+            //anim.SetBool("onAir", false);
+            //anim.SetBool("hitGround", true);
+       //}
     }
 
     void OnCollisionExit(Collision other)
     {
-        onGround = false;
-        rBody.drag = 5;
-        anim.SetBool("onAir", true);
+        //currentPlatformsTouching--;
+
+        
     }
 
     void FixedUpdate()
@@ -179,17 +242,52 @@ public class ChararacterControll : MonoBehaviour {
 
     void Jump()
     {
-        if (jumpInput > 0 && onGround)
+        if (currentPlatformsTouching == 0)
+        {
+
+ 
+            //anim.SetBool("onAir", true);
+           // anim.SetBool("hitGround", false);
+        }
+        if (jumpInput > 0 && anim.GetBool("hitGround") == true && cooldown == false)
         {
             velocity.y = moveSetting.jumpVel;
+
+            Invoke("ResetCooldown", 2.0f);
+            cooldown = true;
         }
-        else if (jumpInput == 0 && onGround)
+        else if (jumpInput == 0 && anim.GetBool("hitGround") == true)
         {
             velocity.y = 0;
+
         }
         else
         {
             velocity.y -= physSetting.downAccel;
         }
+
+        
+
+        //// check the plaforms we are on. if we are on at least one and we are grounded...
+        //if (currentPlatformsTouching >= 1 && Grounded())
+        //{
+        //    onGround = true;
+        //    rBody.drag = 5;
+        //    anim.SetBool("onAir", false);
+        //    anim.SetBool("hitGround", true);
+        //}
+        //else
+        //{
+        //    onGround = false;
+        //    rBody.drag = 5;
+        //    anim.SetBool("onAir", true);
+        //    anim.SetBool("hitGround", false);
+        //}
+
+    }
+
+    void ResetCooldown()
+    {
+        cooldown = false;
     }
 }

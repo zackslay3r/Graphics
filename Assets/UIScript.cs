@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UIScript : MonoBehaviour {
 
-    //public Button widthPlus, widthMinus, lengthPlus, lengthMinus;
+    public Button widthPlus, widthMinus, lengthPlus, lengthMinus;
     public Slider magnitude, frequency;
     public PerlinNoise noiseScript;
     public Toggle animatePerlin;
@@ -15,18 +15,18 @@ public class UIScript : MonoBehaviour {
 
     // Use this for initialization
 	void Start () {
-        //Button btnWidthPlus = widthPlus.GetComponent<Button>();
-        //Button btnWidthMinus = widthMinus.GetComponent<Button>();
-        //Button btnlengthPlus = lengthPlus.GetComponent<Button>();
-        //Button btnlengthMinus = lengthMinus.GetComponent<Button>();
+        Button btnWidthPlus = widthPlus.GetComponent<Button>();
+        Button btnWidthMinus = widthMinus.GetComponent<Button>();
+        Button btnlengthPlus = lengthPlus.GetComponent<Button>();
+        Button btnlengthMinus = lengthMinus.GetComponent<Button>();
 
 
-        // We are going to add listeners to these buttons.
+        //We are going to add listeners to these buttons.
 
-        //btnWidthPlus.onClick.AddListener(delegate { ChangeValues("plus", "width"); });
-        //btnWidthMinus.onClick.AddListener(delegate { ChangeValues("minus", "width"); });
-        //btnlengthPlus.onClick.AddListener(delegate { ChangeValues("plus", "length"); });
-        //btnlengthMinus.onClick.AddListener(delegate { ChangeValues("minus", "length"); });
+       btnWidthPlus.onClick.AddListener(delegate { ChangeValues("plus", "width"); });
+        btnWidthMinus.onClick.AddListener(delegate { ChangeValues("minus", "width"); });
+        btnlengthPlus.onClick.AddListener(delegate { ChangeValues("plus", "length"); });
+        btnlengthMinus.onClick.AddListener(delegate { ChangeValues("minus", "length"); });
     }
 	
 	// Update is called once per frame

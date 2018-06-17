@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 383009834}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -419,8 +419,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 383009833}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.98, y: 31.298111, z: 8.31786}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 5.452, y: 13.456, z: 8.31786}
+  m_LocalScale: {x: 6.4239154, y: 2.132829, z: 6.628348}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -439,7 +439,7 @@ GameObject:
   - component: {fileID: 430216710}
   m_Layer: 0
   m_Name: ThirdPersonController
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -518,26 +518,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d2ddc393322ed4eafe0a69b271a922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 0.5
-  heightPadding: 0.05
+  height: 0.001
+  heightPadding: 0
   maxGroundAngle: 120
   debug: 0
+  currentPlatformsTouching: 0
+  platformCount: 0
   moveSetting:
     forwardVel: 12
     rotateVel: 100
     jumpVel: 25
-    distToGrounded: 0.8
+    distToGrounded: 0.1
     ground:
       serializedVersion: 2
       m_Bits: 4294967295
   physSetting:
     downAccel: 0.75
   inputSetting:
-    inputDelay: 0.1
+    inputDelay: 0.05
     TURN_AXIS: Horizontal
     FORWARD_AXIS: Vertical
     JUMP_AXIS: Jump
-  onGround: 0
 --- !u!1 &464445709
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,7 +863,7 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
@@ -1137,6 +1138,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad495b84bf5d1347902ab7b359972c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  widthPlus: {fileID: 1868721084}
+  widthMinus: {fileID: 2096343945}
+  lengthPlus: {fileID: 1097914932}
+  lengthMinus: {fileID: 1678430302}
   magnitude: {fileID: 53712306}
   frequency: {fileID: 1639612590}
   noiseScript: {fileID: 1918790709}
@@ -5735,7 +5740,7 @@ GameObject:
   - component: {fileID: 1702305121}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5800,8 +5805,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1702305120}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.487513, y: 31.298111, z: 8.31786}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -4.56, y: 13.456, z: 8.31786}
+  m_LocalScale: {x: 6.4239154, y: 2.132829, z: 6.628348}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
@@ -5942,7 +5947,7 @@ GameObject:
   - component: {fileID: 1852908557}
   m_Layer: 0
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6007,8 +6012,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1852908556}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.55, y: 31.298111, z: 8.31786}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 21.239, y: 13.456, z: 8.31786}
+  m_LocalScale: {x: 6.4239154, y: 2.132829, z: 6.628348}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -6062,7 +6067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -6329,7 +6334,7 @@ GameObject:
   - component: {fileID: 2018566779}
   m_Layer: 0
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6394,8 +6399,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2018566778}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.82, y: 33.85, z: 8.31786}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 13.445, y: 18.899, z: 8.31786}
+  m_LocalScale: {x: 6.4239154, y: 2.132829, z: 6.628348}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
@@ -6449,7 +6454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
