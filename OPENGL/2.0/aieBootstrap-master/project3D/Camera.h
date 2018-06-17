@@ -16,13 +16,16 @@ public:
 
 	glm::vec3 GetPos();
 
+	// set the field of view for the camera.
 	float m_fov = glm::pi<float>() * 0.25f;
 private:
 	float theta;
 	float phi;
 
+	// have the limit for the pitch we are allowed for viewing.
 	float pitchLimit = 80.0f;
 
+	// the position of the camera.
 	glm::vec3 position;
 
 	unsigned int m_width = 0;

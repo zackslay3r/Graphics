@@ -1,12 +1,15 @@
 #include "Camera.h"
 
+// The conversion from degrees to Radians
 const float deg2Rad = 3.14159f / 180.0f;
 
+// the last know mouse x,y coords.
 int lastMouseX = 0;
 int lastMouseY = 0;
 
-float moveSpeed = 5.0f;
-float cameraSpeed = 2.0f;
+// movement values.
+float moveSpeed = 6.0f;
+float cameraSpeed = 1.0f;
 
 
 
@@ -24,30 +27,46 @@ void Camera::Update(unsigned int width, unsigned int height, float deltaTime)
 	aie::Input* input = aie::Input::getInstance();
 
 	//Convert angles to radians
-	float thetaR = theta * deg2Rad;
-	float phiR = phi * deg2Rad;
+	float thetaRadians = theta * deg2Rad;
+	float phiRadians = phi * deg2Rad;
 
 	//Calculate forward and right axis and up axis for camera
-	glm::vec3 forward(cos(phiR) * cos(thetaR), sin(phiR), cos(phiR) * sin(thetaR));
-	glm::vec3 right(-sin(thetaR), 0, cos(thetaR));
+	glm::vec3 forward(cos(thetaRadians) * cos(thetaRadians), sin(phiRadians), cos(phiRadians) * sin(thetaRadians));
+	glm::vec3 right(-sin(thetaRadians), 0, cos(thetaRadians));
 	glm::vec3 up(0, 1, 0);
 
 	//Use WASD, QE keys to move around
+	// W = Forward
+	// A = Left
+	// S = Backward
+	// D = Right
+	// Q = Down
+	// E = Up
 	if (input->isKeyDown(aie::INPUT_KEY_E))
+	{
 		position += up * deltaTime * moveSpeed;
+	}
 	if (input->isKeyDown(aie::INPUT_KEY_Q))
+	{
 		position += -up * deltaTime * moveSpeed;
-
+	}
 	if (input->isKeyDown(aie::INPUT_KEY_A))
+	{
 		position += -right * deltaTime * moveSpeed;
+	}
 	if (input->isKeyDown(aie::INPUT_KEY_D))
+	{
 		position += right * deltaTime * moveSpeed;
-
+	}
 	if (input->isKeyDown(aie::INPUT_KEY_W))
+	{
 		position += forward * deltaTime * moveSpeed;
+	}
+	
 	if (input->isKeyDown(aie::INPUT_KEY_S))
+	{
 		position += -forward * deltaTime * moveSpeed;
-
+	}
 	//Get current mouse position
 	int mx = input->getMouseX();
 	int my = input->getMouseY();
@@ -78,11 +97,11 @@ glm::mat4 Camera::GetProjectionMatrix()
 glm::mat4 Camera::GetViewMatrix()
 {
 	//Calculate angles in radians
-	float thetaR = theta * deg2Rad;
-	float phiR = phi * deg2Rad;
+	float thetaRadians = theta * deg2Rad;
+	float phiRadians = phi * deg2Rad;
 
 	//Calculate local forward vector
-	glm::vec3 forward(cos(phiR) * cos(thetaR), sin(phiR), cos(phiR) * sin(thetaR));
+	glm::vec3 forward(cos(phiRadians) * cos(thetaRadians), sin(phiRadians), cos(phiRadians) * sin(thetaRadians));
 
 	//Return view matrix
 	return glm::lookAt(position, position + forward, glm::vec3(0, 1, 0));

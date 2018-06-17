@@ -27,6 +27,8 @@ uniform vec3 Id; // light diffuse
 uniform vec3 Is; // light specular
 uniform vec3 lightDirection;
 uniform vec3 cameraPosition;
+uniform int useTexture = 0;
+
 void main() {
 vec3 N = normalize(vNormal);
 vec3 T = normalize(vTangent);
@@ -81,8 +83,9 @@ float OrenNayar = NdL * (ora + orb * CX * DX);
 
 mat3 TBN = mat3(T,B,N);
 //N = TBN * (texNormal * 2 - 1);
-vec3 texDiffuse = texture( diffuseTexture, vTexCoord ).rgb;
-vec3 texSpecular = texture( specularTexture, vTexCoord ).rgb;
+int inverse = 1 - useTexture;
+vec3 texDiffuse = (texture( diffuseTexture, vTexCoord ).rgb + vec3(inverse,inverse,inverse)) * Kd;
+vec3 texSpecular = (texture( specularTexture, vTexCoord ).rgb + vec3(inverse,inverse,inverse)) * Ks;
 vec3 texNormal = texture( normalTexture, vTexCoord ).rgb;
 // calculate lambert term
 float lambertTerm = OrenNayar;

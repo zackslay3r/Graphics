@@ -26,11 +26,11 @@ bool Application3D::startup() {
 
 	reflectionCoefficent = 0.1f;
 	
-	lightPos = { 0,-3,1 };
-	colour = { 0,0,1 };
 
-	
-	// This is all for the simple shader.
+
+	// These values are for the point light, as well as loading in the normal-mapped shader.
+	lightPos = { 0,-10,1 };
+	colour = { 1,0,0 };
 	m_shader.loadShader(aie::eShaderStage::VERTEX,
 		"./shaders/normalmap.vert");
 	m_shader.loadShader(aie::eShaderStage::FRAGMENT,
@@ -40,7 +40,7 @@ bool Application3D::startup() {
 		return false;
 	}
 
-	// This is all for the simple shader.
+	// These shaders being loaded in are for the toon shader.
 	m_toonShader.loadShader(aie::eShaderStage::VERTEX,
 		"./shaders/toonshader.vert");
 	m_toonShader.loadShader(aie::eShaderStage::FRAGMENT,
@@ -52,76 +52,108 @@ bool Application3D::startup() {
 
 
 
-	/*m_phongShader.loadShader(aie::eShaderStage::VERTEX, "shaders/phong.vert");*/
-	/*m_phongShader.loadShader(aie::eShaderStage::FRAGMENT, "shaders/phong.frag");*/
+	// These shaders being loaded in are for the phong shader.
 	m_phongShader.loadShader(aie::eShaderStage::VERTEX, "shaders/normalmap.vert");
-	//m_phongShader.loadShader(aie::eShaderStage::FRAGMENT, "shaders/normalmap.frag");
+
 	m_phongShader.loadShader(aie::eShaderStage::FRAGMENT, "shaders/normalmap.frag");
 	if (m_phongShader.link() == false) {
 		printf("Shader Error: %s\n", m_phongShader.getLastError());
 		return false;
 	}
 	
+
+
 	roughness = 0.3f;
 
 
-	//if (m_bunnyMesh.load("./stanford/bunny.obj") == false) 
-	//{
-	//	printf("Bunny Mesh Error!\n");
-	//	return false;
-	//}
-	//m_bunnyTransform = {
-	//	0.5f,0,0,0,
-	//	0,0.5f,0,0,
-	//	0,0,0.5f,0,
-	//	0,0,0,1
-	//};
-
-	if (m_spearMesh.load("./stanford/soulspear.obj",
+	
+	// Load the buddha mesh and set its position.
+	if (m_buddaMesh.load("./stanford/Buddha.obj",
 		true, true) == false) {
-		printf("Soulspear Mesh Error!\n");
+		printf("Buddha Mesh Error!\n");
 		return false;
 	}
-	m_spearTransform = {
+	m_buddaTransform = {
 		1,0,0,0,
 		0,1,0,0,
 		0,0,1,0,
-		0,0,0,1
+		-15,0,0,1
 	};
 
-	if (m_toonSpear.load("./stanford/soulspear.obj",
+
+
+	// Load the bunny mesh and set its position.
+	if (m_toonbunny.load("./stanford/bunny.obj",
 		true, true) == false) {
-		printf("Soulspear Mesh Error!\n");
+		printf("Bunny Mesh Error!\n");
 		return false;
 	}
-	m_toonSpearTransform = {
+	m_bunnyTransform = {
 		1,0,0,0,
 		0,1,0,0,
 		0,0,1,0,
-		-2.5,0,0,1
+		-2,0,-6,1
 	};
 	
 	//Set the light variables.
-	m_light.diffuse = { 0,0,0 };
-	m_light.specular = { 0,0,0 };
+	m_light.diffuse = { 1,1,1 };
+	m_light.specular = { 1,1,1 };
 	m_ambientLight = { 0.2f,0.2f,0.2f };
 
-	if (m_phongSpear.load("./stanford/soulspear.obj",
+	// Load the apple mesh and set its position.
+	if (m_appleMesh.load("./stanford/apple.obj",
 		true, true) == false) {
-		printf("Soulspear Mesh Error!\n");
+		printf("Apple Mesh Error!\n");
 		return false;
 	}
-	m_spearPhongTransform = {
+	m_appleTransform = {
 		1,0,0,0,
 		0,1,0,0,
 		0,0,1,0,
 		2.5,0,0,1
 	};
 
+	// Load the spear mesh and set its position.
+	if (m_spearMesh.load("./stanford/soulspear.obj",
+		true, true) == false) {
+		printf("Fox Mesh Error!\n");
+		return false;
+	}
+	m_spearTransform = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		15,0,0,1
+	};
 
-	// create simple camera transforms
-//	m_viewMatrix = camera->getView();
-//	m_projectionMatrix = camera->getProjection();
+	// Load the dragon mesh and set its position.
+	if (m_dragonMesh.load("./stanford/dragon.obj",
+		true, true) == false) {
+		printf("Dragon Mesh Error!\n");
+		return false;
+	}
+	m_dragonTransform = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		10,10,0,1
+	};
+
+	// Load the Lucy mesh and set its position.
+	if (m_LucyMesh.load("./stanford/Lucy.obj",
+		true, true) == false) {
+		printf("Lucy Mesh Error!\n");
+		return false;
+	}
+	m_LucyTransform = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		10,4,-10,1
+	};
+
+
+	// return true if all the shaders and model have been loaded correctly.
 	return true;
 }
 
@@ -136,29 +168,17 @@ void Application3D::update(float deltaTime) {
 	////dt = deltaTime;
 	float time = getTime();
 
-	//// rotate camera
-	//camera.Update(aie::Application::getWindowWidth(), aie::Application::getWindowHeight(), time);
-	/*camera->viewTransform = glm::lookAt(vec3(glm::sin(time) * 5, 5, glm::cos(time) * 5),vec3(0), vec3(0, 1, 0));*/
-	//camera->update(time);
+	
 	// wipe the gizmos clean for this frame
 	camera.Update(aie::Application::getWindowWidth(), aie::Application::getWindowHeight(), deltaTime);
 	
 	Gizmos::clear();
-	// rotate light
+	// rotating the directional light.
 	m_light.direction = glm::normalize(vec3(glm::cos(time * 2),
 		glm::sin(time * 2), 0));
 
 	
-	// update perspective in case window resized
-	//m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
-	//								  getWindowWidth() / (float)getWindowHeight(),
-	//								  0.1f, 1000.f);
-	//camera->setPerspective(glm::pi<float>() * 0.25f,
-	//	getWindowWidth() / (float)getWindowHeight(),
-	//	0.1f, 1000.f);
-
-	// draw 3D gizmos
-	/*Gizmos::draw(camera.GetProjectionMatrix() * camera.GetViewMatrix());*/
+	
 	
 	
 
@@ -177,22 +197,9 @@ void Application3D::update(float deltaTime) {
 	// add a transform so that we can see the axis
 	Gizmos::addTransform(mat4(1));
 
-	// demonstrate a few shapes
-	//Gizmos::addAABBFilled(vec3(0), vec3(1), vec4(0, 0.5f, 1, 0.25f));
-	Gizmos::addSphere(lightPos, 0.1, 8, 8, vec4(1, 0, 0, 0.5f));
-	
-	//Gizmos::addRing(vec3(5, 0, -5), 1, 1.5f, 8, vec4(0, 1, 0, 1));
-	//Gizmos::addDisk(vec3(-5, 0, 5), 1, 16, vec4(1, 1, 0, 1));
-	//Gizmos::addArc(vec3(-5, 0, -5), 0, 2, 1, 8, vec4(1, 0, 1, 1));
-
 	mat4 t = glm::rotate(mat4(1), time, glm::normalize(vec3(1, 1, 1)));
 	t[3] = vec4(-2, 0, 0, 1);
-	Gizmos::addCylinderFilled(vec3(0), 0.5f, 1, 5, vec4(0, 1, 1, 1), &t);
 
-	// demonstrate 2D gizmos
-	Gizmos::add2DAABB(glm::vec2(getWindowWidth() / 2, 100),
-					  glm::vec2(getWindowWidth() / 2 * (fmod(getTime(), 3.f) / 3), 20),
-					  vec4(0, 1, 1, 1));
 
 	
 	
@@ -214,68 +221,69 @@ void Application3D::draw() {
 
 	float time = getTime();
 
-	// rotate camera
-	
-	//camera->update(dt);
-	//// update perspective in case window resized
-	////m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
-	//	//								  getWindowWidth() / (float)getWindowHeight(),
-	//	//								  0.1f, 1000.f);
-	//camera->setPerspective(glm::pi<float>() * 0.25f,
-	//	getWindowWidth() / (float)getWindowHeight(),
-	//	0.1f, 1000.f);
 
-	//// draw 3D gizmos
-	//Gizmos::draw(camera->getProjectionView());
 
 	// draw 3D gizmos
 	Gizmos::draw(camera.GetCameraMatrix());
 
-	/////SIMPLE SHADER.
-	//// bind shader
-	//m_shader.bind();
-	//// bind transform
-	//auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
-	//m_shader.bindUniform("ProjectionViewModel", pvm);
-	////draw mesh.
-	//m_spearMesh.draw();
 	
-
-	//Phong Shader + Light.
 	//bind shader
 	m_phongShader.bind();
 
-	//bind transform
-	auto pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_spearPhongTransform;
+	//bind transform of the buddha
+	auto pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_buddaTransform;
 	m_phongShader.bindUniform("ProjectionViewModel", pvm);
 
-	//bind transforms for lighting
-	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearPhongTransform)));
+	//bind transforms for lighting the buddha model
+	// Buddha is not multitextured.
+	m_phongShader.bindUniform("useTexture", 0);
+	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_buddaTransform)));
 	m_phongShader.bindUniform("Ia", m_ambientLight);
 	m_phongShader.bindUniform("Id", m_light.diffuse);
 	m_phongShader.bindUniform("Is", m_light.specular);
 	m_phongShader.bindUniform("lightDirection", m_light.direction);
 	m_phongShader.bindUniform("cameraPosition",
 		vec3(glm::inverse(camera.GetViewMatrix())[3]));
-	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearPhongTransform)));
+	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_buddaTransform)));
 	m_phongShader.bindUniform("lightPosition", lightPos);
 	m_phongShader.bindUniform("colour", colour);
-
-
-
-	// draw mesh
-
-
-	m_phongSpear.draw();
 	
-	m_shader.bind();
-	
-	pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_spearTransform;
-	m_shader.bindUniform("ProjectionViewModel", pvm);
-	//m_shader.bindUniform("ProjectionViewModel", pvm);
+	// draw the buddha.
+	m_buddaMesh.draw();
 
+
+
+	//bind transform of the lucy.
+	pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_LucyTransform;
+	m_phongShader.bindUniform("ProjectionViewModel", pvm);
 
 	//bind transforms for lighting
+	
+	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_LucyTransform)));
+	m_phongShader.bindUniform("Ia", m_ambientLight);
+	m_phongShader.bindUniform("Id", m_light.diffuse);
+	m_phongShader.bindUniform("Is", m_light.specular);
+	m_phongShader.bindUniform("lightDirection", m_light.direction);
+	m_phongShader.bindUniform("cameraPosition",
+		vec3(glm::inverse(camera.GetViewMatrix())[3]));
+	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_LucyTransform)));
+	m_phongShader.bindUniform("lightPosition", lightPos);
+	m_phongShader.bindUniform("colour", colour);
+	m_LucyMesh.draw();
+
+
+
+
+	// open the normalmapped shader for binding.
+	m_shader.bind();
+	
+	// Get and bind the spear transform.
+	pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_spearTransform;
+	m_shader.bindUniform("ProjectionViewModel", pvm);
+	
+
+
+	//bind transforms for lighting the spear model.
 	m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
 	m_shader.bindUniform("Ia", m_ambientLight);
 	m_shader.bindUniform("Id", m_light.diffuse);
@@ -286,31 +294,56 @@ void Application3D::draw() {
 	m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
 	m_shader.bindUniform("roughness", roughness);
 	m_shader.bindUniform("reflectionCoefficient", reflectionCoefficent);
+	// make sure that multitextures are turned on.
+	m_shader.bindUniform("useTexture", 1);
 
-
-
-	// bind transform
-//	auto pvm = camera->projectionTransform * camera->viewTransform * m_spearTransform;
-//	m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	//bind transforms for lighting
-	
-	//bind transform
-	
+	// draw the spear.
 	m_spearMesh.draw();
+
+	// Get and bind the dragon transform.
+	pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_dragonTransform;
+	m_shader.bindUniform("ProjectionViewModel", pvm);
+
+
+
+	//bind transforms for lighting the dragon model.
+	m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	m_shader.bindUniform("Ia", m_ambientLight);
+	m_shader.bindUniform("Id", m_light.diffuse);
+	m_shader.bindUniform("Is", m_light.specular);
+	m_shader.bindUniform("lightDirection", m_light.direction);
+	m_shader.bindUniform("cameraPosition",
+		vec3(glm::inverse(camera.GetViewMatrix())[3]));
+	m_shader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	m_shader.bindUniform("roughness", roughness);
+	m_shader.bindUniform("reflectionCoefficient", reflectionCoefficent);
+	// the dragon is not multitextured. so dont enable it.
+	m_shader.bindUniform("useTexture", 0);
+
+	// Draw the dragon.
+	m_dragonMesh.draw();
 	
-	
+	// Open the toon shader for binding.
 	m_toonShader.bind();
-	pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_toonSpearTransform;
+
+	// bind the transforms for toon shading the bunny.
+	pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_bunnyTransform;
 	m_toonShader.bindUniform("ProjectionViewModel", pvm);
 	m_toonShader.bindUniform("lightDir", m_light.direction);
-	m_toonShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_toonSpearTransform)));
-	m_toonSpear.draw();
+	m_toonShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_bunnyTransform)));
+	// draw the bunny.
+	m_toonbunny.draw();
 
+	// bind the transforms for toon shading the apple.
+	pvm = camera.GetProjectionMatrix() * camera.GetViewMatrix() * m_appleTransform;
+	m_toonShader.bindUniform("ProjectionViewModel", pvm);
+	m_toonShader.bindUniform("lightDir", m_light.direction);
+	m_toonShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_appleTransform)));
+	// draw the apple.
+	m_appleMesh.draw();
 
-	//m_texturedShader.bindUniform("ProjectViewModel", pvm);
-	// draw mesh
-	//m_bunnyMesh.draw();
-	// draw mesh
+	
+
 	
 	
 	// draw 2D gizmos using an orthogonal projection matrix (or screen dimensions)
